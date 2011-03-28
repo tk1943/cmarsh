@@ -1,0 +1,169 @@
+/ # mkdir /usr/local/etc/opt
+/ # mount --bind /usr/local/etc/opt /opt
+
+
+wget http://ipkg.nslu2-linux.org/feeds/optware/oleg/cross/stable/uclibc-opt_0.9.28-13_mipsel.ipk
+wget http://ipkg.nslu2-linux.org/feeds/optware/oleg/cross/stable/ipkg-opt_0.99.163-10_mipsel.ipk
+
+/ # ipkg-cl install /tmp/usbmounts/sda1/PUBLIC/IPK/uclibc-opt_0.9.28-13_mipsel.ipk 
+Installing uclibc-opt (0.9.28-13) to root...
+uclibc-opt: unsatisfied recommendation for ipkg-opt
+Configuring uclibc-opt
+Updating /opt/etc/ld.so.cache
+Successfully terminated.
+
+/ # ipkg-cl install /tmp/usbmounts/sda1/PUBLIC/IPK/ipkg-opt_0.99.163-10_mipsel.ipk 
+Installing ipkg-opt (0.99.163-10) to root...
+Configuring ipkg-opt
+Successfully terminated.
+
+/ # /opt/bin/ipkg update
+/ # /opt/bin/ipkg list | grep curl
+
+
+/ # /opt/bin/ipkg install libcurl 
+Installing libcurl (7.21.3-1) to /opt/...
+Downloading http://ipkg.nslu2-linux.org/feeds/optware/oleg/cross/stable/libcurl_7.21.3-1_mipsel.ipk
+Installing openssl (0.9.7m-5) to /opt/...
+Downloading http://ipkg.nslu2-linux.org/feeds/optware/oleg/cross/stable/openssl_0.9.7m-5_mipsel.ipk
+Installing zlib (1.2.5-1) to /opt/...
+Downloading http://ipkg.nslu2-linux.org/feeds/optware/oleg/cross/stable/zlib_1.2.5-1_mipsel.ipk
+Configuring libcurl
+Configuring openssl
+Configuring zlib
+Successfully terminated.
+
+/opt/bin/curl http://www.google.com.tw
+
+reboot and check curl
+
+mount --bind /usr/local/etc/opt /opt
+/opt/bin/curl http://www.google.com.tw
+
+
+/ # /opt/bin/ipkg install lighttpd 
+Installing lighttpd (1.4.28-1) to /opt/...
+Downloading http://ipkg.nslu2-linux.org/feeds/optware/oleg/cross/stable/lighttpd_1.4.28-1_mipsel.ipk
+package lighttpd suggests installing bzip2
+package lighttpd suggests installing e2fsprogs
+package lighttpd suggests installing libxml2
+package lighttpd suggests installing lua
+package lighttpd suggests installing sqlite
+package lighttpd suggests installing openldap-libs
+package lighttpd suggests installing mysql
+Installing pcre (8.12-1) to /opt/...
+Downloading http://ipkg.nslu2-linux.org/feeds/optware/oleg/cross/stable/pcre_8.12-1_mipsel.ipk
+Installing libuclibc++ (0.2.2-9) to /opt/...
+Downloading http://ipkg.nslu2-linux.org/feeds/optware/oleg/cross/stable/libuclibc++_0.2.2-9_mipsel.ipk
+Installing spawn-fcgi (1.6.3-1) to /opt/...
+Downloading http://ipkg.nslu2-linux.org/feeds/optware/oleg/cross/stable/spawn-fcgi_1.6.3-1_mipsel.ipk
+Configuring libuclibc++
+Configuring lighttpd
+Starting web server: lighttpd
+Configuring pcre
+Configuring spawn-fcgi
+Successfully terminated.
+
+/ # find /opt -name lighttpd
+/opt/var/log/lighttpd
+/opt/sbin/lighttpd
+/opt/etc/lighttpd
+/opt/lib/lighttpd
+/opt/share/www/lighttpd
+/opt/share/doc/lighttpd
+
+
+vi /opt/etc/lighttpd/lighttpd.conf
+
+add server.event-handler = "poll"
+
+
+/ # /opt/etc/init.d/S80lighttpd start
+
+/ # /opt/bin/curl http://127.0.0.1:8081/
+<html>
+  <head>
+    <title>lighttpd default page</title>
+  </head>
+  <body>
+    <h2>lighttpd server is running.</h2>
+  </body>
+</html>
+
+/ # df -h
+Filesystem                Size      Used Available Use% Mounted on
+/dev/root                16.2M     16.2M         0 100% /
+/dev/mtdblock/2          60.0M     11.1M     48.9M  18% /usr/local/etc
+/dev/rd/0                40.0k     40.0k         0 100% /mnt/rd
+/dev/scsi/host2/bus0/target0/lun0/part1    149.0G    122.2G     26.8G  82% /tmp/usbmounts/sda1
+/dev/mtdblock/2          60.0M     11.1M     48.9M  18% /opt
+
+
+add php 
+
+/ # /opt/bin/ipkg install php php-fcgi php-curl libuclibc++
+
+Filesystem                Size      Used Available Use% Mounted on
+/dev/root                16.2M     16.2M         0 100% /
+/dev/mtdblock/2          60.0M     37.3M     22.7M  62% /usr/local/etc
+/dev/rd/0                40.0k     40.0k         0 100% /mnt/rd
+/dev/scsi/host2/bus0/target0/lun0/part1    149.0G    122.2G     26.8G  82% /tmp/usbmounts/sda1
+/dev/mtdblock/2          60.0M     37.3M     22.7M  62% /opt
+
+/ # /opt/bin/php -v                               
+PHP 5.2.17 (cli) (built: Jan 12 2011 07:00:27) 
+Copyright (c) 1997-2010 The PHP Group
+Zend Engine v2.2.0, Copyright (c) 1998-2010 Zend Technologies
+
+
+/ # vi /opt/share/www/info.php
+<?php phpinfo();?>
+
+/ # /opt/etc/init.d/S80lighttpd stop
+/ # /opt/etc/init.d/S80lighttpd start
+
+ # /opt/bin/curl http://127.0.0.1:8081/info.php
+
+
+reboot 
+
+mount --bind /usr/local/etc/opt /opt
+/opt/etc/init.d/S80lighttpd start
+
+
+http://192.168.2.100:8081/info.php
+
+vi /opt/share/www/a.php
+
+<?php
+header('Content-Type: text/xml');
+echo '<?xml version="1.0" ?>';
+echo "\r\n";
+$myFile = "/opt/foo.txt";
+$fh = fopen($myFile, 'w') or die("can't open file");
+$stringData = "Bobby Bopper\r\n";
+fwrite($fh, $stringData);
+fwrite($fh, date("c"));
+fclose($fh);
+?>
+<rss version="2.0">
+  <channel>
+       <title>RSS TITLE</title>
+      <item>
+      <title>TITLE OK</title>
+      <link></link>
+      </item>
+  </channel>
+</rss>
+
+
+
+/ # cat /opt/foo.txt
+Bobby Bopper
+2011-03-23T02:32:03-05:00/ 
+
+2011-03-23T02:32:03-05:00/ # find /usr/local/etc -name *.rss
+/usr/local/etc/dvdplayer/savedrss/scripts/news.rss
+
+http://127.0.0.1:8081/a.php
+[SAVE TO FILE /opt/foo.txt work]

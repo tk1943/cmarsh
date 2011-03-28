@@ -1,0 +1,132 @@
+/ # ls -al  /usr/local/etc/dvdplayer/
+drwxrwxrwx    1 root     root         2048 Mar 28 10:18 .
+drwxr-xr-x    1 root     root         2048 Mar 23 13:58 ..
+-rw-r--r--    1 root     root            1 Mar 19 12:32 Stock_region.dat
+-rw-r--r--    1 root     root        63004 Mar 27 22:26 VenusSetup.dat
+-rw-------    1 root     root         5129 Mar 27 22:26 bookmark.db
+-rwxrwxrwx    1 root     root           48 Apr 26  2010 dmem.bin
+-rw-r--r--    1 root     root        13836 Mar 19 12:33 dtv_channel.txt
+-rw-r--r--    1 root     root            2 Mar 26 14:06 isRTC
+drwxr-xr-x    1 root     root         2048 Mar 23 07:17 savedrss
+-rw-r--r--    1 root     root         3072 Mar 19 12:32 schedule_history.db
+-rw-r--r--    1 root     root         4096 Mar 19 12:32 schedule_record.db
+/ # ls -al  /usr/local/etc/dvdplayer/savedrss
+drwxr-xr-x    1 root     root         2048 Mar 23 07:17 .
+drwxrwxrwx    1 root     root         2048 Mar 28 10:18 ..
+drwxr-xr-x    1 root     root         2048 Mar 23 07:17 scripts
+/ # ls -al  /usr/local/etc/dvdplayer/savedrss/scripts/
+drwxr-xr-x    1 root     root         2048 Mar 23 07:17 .
+drwxr-xr-x    1 root     root         2048 Mar 23 07:17 ..
+-rw-r--r--    1 root     root        10820 Mar 23 07:36 news.rss
+
+
+/ # cat /usr/local/etc/dvdplayer/savedrss/scripts/news.rss 
+<?xml version="1.0" ?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <onEnter>showIdle();</onEnter>
+    <mediaDisplay name="onePartView" itemPerPage="7" imageFocus="image/list_select_bar.bmp" forceFocusOnItem="yes" sideColorLeft="27:35:51" sideColorRight="27:35:51" backgroundColor="27:35:51" sideLeftWidthPC="0" sideRightWidthPC="100" sideTopHeightPC="0" sideBottomHeightPC="0" itemXPC="17" itemYPC="15.7" itemWidthPC="68" itemHeightPC="7" itemImageXPC="7.8" itemImageYPC="15.7" itemImageWidthPC="7.79" itemImageHeightPC="7" capWidthPC="0" capHeightPC="0" idleImageXPC="83.12" idleImageYPC="89.58" idleImageWidthPC="3.1" idleImageHeightPC="5.5" headerImageXPC="5" headerImageYPC="10" headerXPC="0" headerYPC="2" headerWidthPC="0" headerCapWidthPC="0" showInfoPage="no" showDefaultInfo="no" showHeader="no" headerImageWidthPC="11" headerImageHightPC="10" autoSelectMenu="no" autoSelectItem="no" selectMenuOnRight="no" imageUnFocus="null" menuXPC="5" menuYPC="55.1" menuWidthPC="28.5" menuHeightPC="6" itemImageCapYPC="0" itemBackgroundColor="27:35:51" popupXPC="7.8" popupYPC="33.2" popupWidthPC="22.3" popupHeightPC="5.5" popupFontSize="13" popupBorderColor="28:35:51" popupForegroundColor="255:255:255" popupBackgroundColor="28:35:51" rollItems="no" imageParentFocus="image/list_select_bar_00.bmp">
+        <idleImage>image/POPUP_LOADING_01.png</idleImage>
+        <idleImage>image/POPUP_LOADING_02.png</idleImage>
+        <idleImage>image/POPUP_LOADING_03.png</idleImage>
+        <idleImage>image/POPUP_LOADING_04.png</idleImage>
+        <idleImage>image/POPUP_LOADING_05.png</idleImage>
+        <idleImage>image/POPUP_LOADING_06.png</idleImage>
+        <backgroundDisplay>
+            <text offsetXPC="0" offsetYPC="0" widthPC="100" heightPC="100" backgroundColor="33:40:58" cornerRounding="10" />
+            <text offsetXPC="4.5" offsetYPC="13" widthPC="91" heightPC="74" backgroundColor="46:51:68" cornerRounding="5" />
+            <text offsetXPC="5" offsetYPC="13.89" widthPC="90" heightPC="52" backgroundColor="27:35:51" cornerRounding="5" />
+            <text offsetXPC="5" offsetYPC="66.78" widthPC="90" heightPC="19.33" backgroundColor="27:35:51" cornerRounding="5" />
+        </backgroundDisplay>
+        <script>item_per_page=7; itemcount = getPageInfo(&quot;itemCount&quot;); if(itemcount&gt;0) { focusIndex = getFocusItemIndex(); focusIndex = Add(focusIndex, 1); if(focusIndex==1) { begin_of_item=1; if(itemcount&gt;item_per_page) end_of_item=item_per_page; else end_of_item=itemcount; } else { if(focusIndex&gt;end_of_item) { end_of_item=focusIndex; begin_of_item=Add(end_of_item, (1-item_per_page)); } if(begin_of_item&gt;focusIndex) { begin_of_item=focusIndex; end_of_item=Add(begin_of_item, (item_per_page-1)); } } print(&quot; begin, end =&quot;, begin_of_item, end_of_item); }</script>
+        <image redraw="yes" offsetXPC="49.5" offsetYPC="14" widthPC="1" heightPC="1" backgroundColor="-1:-1:-1">
+            <script>itemcount = getPageInfo(&quot;itemCount&quot;); if(itemcount&gt;item_per_page) { focusIndex = getFocusItemIndex(); focusIndex = Add(focusIndex, 1); if(begin_of_item!=1) &quot;image/arrow_up.PNG&quot;; else &quot;image/image_null.PNG&quot;; } else &quot;image/image_null.PNG&quot;;</script>
+        </image>
+        <image redraw="yes" offsetXPC="49.5" offsetYPC="64.9" widthPC="1" heightPC="1" backgroundColor="-1:-1:-1">
+            <script>itemcount = getPageInfo(&quot;itemCount&quot;); if(itemcount&gt;item_per_page) { focusIndex = getFocusItemIndex(); focusIndex = Add(focusIndex, 1); if(end_of_item!=itemcount) &quot;image/arrow_down.PNG&quot;; else &quot;image/image_null.PNG&quot;; } else &quot;image/image_null.PNG&quot;;</script>
+        </image>
+    </mediaDisplay>
+    <item_template>
+        <mediaDisplay name="onePartView" itemPerPage="7" imageFocus="image/list_select_bar.bmp" forceFocusOnItem="yes" sideColorLeft="27:35:51" sideColorRight="27:35:51" backgroundColor="27:35:51" sideLeftWidthPC="0" sideRightWidthPC="100" sideTopHeightPC="0" sideBottomHeightPC="0" itemXPC="17" itemYPC="15.7" itemWidthPC="68" itemHeightPC="7" itemImageXPC="7.8" itemImageYPC="15.7" itemImageWidthPC="7.79" itemImageHeightPC="7" capWidthPC="0" capHeightPC="0" idleImageXPC="83.12" idleImageYPC="89.58" idleImageWidthPC="3.1" idleImageHeightPC="5.5" headerImageXPC="5" headerImageYPC="10" headerXPC="0" headerYPC="2" headerWidthPC="0" headerCapWidthPC="0" showInfoPage="no" showDefaultInfo="no" showHeader="no" headerImageWidthPC="11" headerImageHightPC="10" autoSelectMenu="no" autoSelectItem="no" selectMenuOnRight="no" imageUnFocus="null" menuXPC="5" menuYPC="55.1" menuWidthPC="28.5" menuHeightPC="6" itemImageCapYPC="0" itemBackgroundColor="27:35:51" popupXPC="7.8" popupYPC="33.2" popupWidthPC="22.3" popupHeightPC="5.5" popupFontSize="13" popupBorderColor="28:35:51" popupForegroundColor="255:255:255" popupBackgroundColor="28:35:51" rollItems="no" imageParentFocus="image/list_select_bar_00.bmp">
+            <idleImage>image/POPUP_LOADING_01.png</idleImage>
+            <idleImage>image/POPUP_LOADING_02.png</idleImage>
+            <idleImage>image/POPUP_LOADING_03.png</idleImage>
+            <idleImage>image/POPUP_LOADING_04.png</idleImage>
+            <idleImage>image/POPUP_LOADING_05.png</idleImage>
+            <idleImage>image/POPUP_LOADING_06.png</idleImage>
+            <backgroundDisplay>
+                <text offsetXPC="0" offsetYPC="0" widthPC="100" heightPC="100" backgroundColor="33:40:58" cornerRounding="10" />
+                <text offsetXPC="4.5" offsetYPC="13" widthPC="91" heightPC="74" backgroundColor="46:51:68" cornerRounding="5" />
+                <text offsetXPC="5" offsetYPC="13.89" widthPC="90" heightPC="52" backgroundColor="27:35:51" cornerRounding="5" />
+                <text offsetXPC="5" offsetYPC="66.78" widthPC="90" heightPC="19.33" backgroundColor="27:35:51" cornerRounding="5" />
+            </backgroundDisplay>
+            <!-- background color of short story section -->
+            <text offsetXPC="7.8" offsetYPC="72.5" widthPC="81" heightPC="12" backgroundColor="28:35:51" redraw="yes" />
+            <text redraw="yes" offsetXPC="85" offsetYPC="59.89" widthPC="9.7" heightPC="6" fontSize="12" backgroundColor="27:35:51" foregroundColor="200:200:200" useBackgroundSurface="no" align="right">
+                <script_replace>if(getPageInfo(&quot;itemCount&quot;)!=0) { focusIndex = getFocusItemIndex(); focusIndex = Add(focusIndex, 1); focusIndex + &quot;/&quot; + getPageInfo(&quot;itemCount&quot;); } else &quot; &quot;;</script_replace>
+            </text>
+            <!--onUserInput>
+                                currentUserInput = currentUserInput();
+                                if (currentUserInput == "up") 
+                                {
+                                                print("up");
+                                        }
+                                else    if (currentUserInput == "down")
+                                {
+                                        print("down");
+                                }                               
+                        </onUserInput-->
+            <!-- the short story -->
+            <text offsetXPC="7.8" offsetYPC="70" widthPC="73" heightPC="11" fontSize="10" lines="4" foregroundColor="255:255:255" backgroundColor="28:35:51" redraw="yes">
+                <script_replace>if(getItemInfo(&quot;description&quot;)==null) &quot;&quot;; else getItemInfo(&quot;description&quot;);</script_replace>
+            </text>
+            <!-- image of the story -->
+            <image offsetXPC="81" offsetYPC="68" widthPC="12" heightPC="12" redraw="yes">image/image_null.PNG</image>
+            <image offsetXPC="81" offsetYPC="68" widthPC="12" heightPC="12" redraw="yes">
+                <script_replace>if(getItemInfo(&quot;media:thumbnail&quot;)==null) &quot;image/image_null.PNG&quot;; else getItemInfo(&quot;media:thumbnail&quot;);</script_replace>
+            </image>
+            <script_replace>item_per_page=7; itemcount = getPageInfo(&quot;itemCount&quot;); if(itemcount&gt;0) { focusIndex = getFocusItemIndex(); focusIndex = Add(focusIndex, 1); if(focusIndex==1) { begin_of_item=1; if(itemcount&gt;item_per_page) end_of_item=item_per_page; else end_of_item=itemcount; } else { if(focusIndex&gt;end_of_item) { end_of_item=focusIndex; begin_of_item=Add(end_of_item, (1-item_per_page)); } if(begin_of_item&gt;focusIndex) { begin_of_item=focusIndex; end_of_item=Add(begin_of_item, (item_per_page-1)); } } print(&quot; begin, end =&quot;, begin_of_item, end_of_item); }</script_replace>
+            <image redraw="yes" offsetXPC="49.5" offsetYPC="14" widthPC="1" heightPC="1" backgroundColor="-1:-1:-1">
+                <script_replace>itemcount = getPageInfo(&quot;itemCount&quot;); if(itemcount&gt;item_per_page) { focusIndex = getFocusItemIndex(); focusIndex = Add(focusIndex, 1); if(begin_of_item!=1) &quot;image/arrow_up.PNG&quot;; else &quot;image/image_null.PNG&quot;; } else &quot;image/image_null.PNG&quot;;</script_replace>
+            </image>
+            <image redraw="yes" offsetXPC="49.5" offsetYPC="64.9" widthPC="1" heightPC="1" backgroundColor="-1:-1:-1">
+                <script_replace>itemcount = getPageInfo(&quot;itemCount&quot;); if(itemcount&gt;item_per_page) { focusIndex = getFocusItemIndex(); focusIndex = Add(focusIndex, 1); if(end_of_item!=itemcount) &quot;image/arrow_down.PNG&quot;; else &quot;image/image_null.PNG&quot;; } else &quot;image/image_null.PNG&quot;;</script_replace>
+            </image>
+        </mediaDisplay>
+    </item_template>
+    <channel>
+        <title>$[RSS_NEWS]</title>
+        <link>./scripts/news.rss</link>
+        <!--<media:thumbnail url="http://static.youku.com/v1.0.0328/index/img/youkulogo.gif" width="120" height="90" />-->
+        <media:thumbnail url="image/rss.jpg" width="120" height="90" />
+        <item>
+            <title>$[RSS_NEWS_ADD_RSS_URL]</title>
+            <link>rss_command://addItem</link>
+            <media:thumbnail url="image/rss.jpg" width="120" height="90" />
+        </item>
+        <item>
+            <title>$[RSS_NEWS_CNN_NEWS_RSS]</title>
+            <link>./scripts/cnn.rss</link>
+            <icon>image/CNN_logo.JPG</icon>
+            <media:thumbnail url="image/CNN_logo.JPG" />
+        </item>
+        <item>
+            <title>$[RSS_NEWS_NPR_NEWS_RSS]</title>
+            <link>./scripts/npr.rss</link>
+            <icon>http://media.npr.org/chrome/npr-medium_r.gif</icon>
+            <media:thumbnail url="http://media.npr.org/chrome/npr-medium_r.gif" />
+        </item>
+        <item>
+            <title>$[RSS_NEWS_BBC_NEWS_RSS]</title>
+            <link>./scripts/bbc.rss</link>
+            <icon>http://news.bbc.co.uk/nol/shared/img/bbc_news_120x60.gif</icon>
+            <media:thumbnail url="http://news.bbc.co.uk/nol/shared/img/bbc_news_120x60.gif" />
+        </item>
+        <item>
+            <title>Hello IR Action</title>
+            <link>http://127.0.0.1:8081/a.php</link>
+            <canDelete>yes</canDelete>
+            <canEnterItem>false</canEnterItem>
+        </item>
+    </channel>
+</rss>
+

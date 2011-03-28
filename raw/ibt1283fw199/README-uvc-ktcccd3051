@@ -1,0 +1,81 @@
+--- plug ktcccd3051 uvc cam
+
+Linux video capture interface: v1.00
+usbcore: registered new driver uvcvideo
+USB Video Class driver (SVN r201)
+usb 1-2: new high speed USB device using ehci_hcd and address 3
+uvcvideo: Found UVC 1.00 device USB2.0 Camera (1e4e:0100)
+uvcvideo: Failed to query (135) UVC control 1 (unit 0) : -32 (exp. 26).
+###################################################################
+[cfyeh-test] usb_set_configuration(1454)
+Don't support this usb device or don't insert correct module yet!!!
+bus_id 1-2:1.1 (config #1, interface 1)
+###################################################################
+
+/tmp/usbmounts/sda1/PUBLIC/IPK/asus-ko # ls /dev/v4l/video0 
+/dev/v4l/video0
+
+
+/ # /opt/bin/ffmpeg -r 15 -f video4linux2 -s 320x240 -i /dev/v4l/video0 -vframes 1 test1.jpg
+FFmpeg version UNKNOWN, Copyright (c) 2000-2008 Fabrice Bellard, et al.
+  configuration: --enable-cross-compile --cross-prefix=/home/slug/optware/oleg/toolchain/mipsel-linux-uclibc/gcc-4.1.1-uclibc-0.9.28/bin/mipsel-linux-uclibc- --arch=mipsel --disable-encoder=snow --disable-decoder=snow --enable-shared --disable-static --enable-gpl --enable-postproc --prefix=/opt
+  libavutil version: 49.6.0
+  libavcodec version: 51.54.0
+  libavformat version: 52.13.0
+  libavdevice version: 52.0.0
+  built on Nov 23 2010 22:56:54, gcc: 4.1.1
+Unknown input or output format: video4linux2
+
+/tmp # /opt/bin/ffmpeg -r 1 -f video4linux -s 320x240 -i /dev/v4l/video0 -vframes 1 test1.jpeg 
+FFmpeg version UNKNOWN, Copyright (c) 2000-2008 Fabrice Bellard, et al.
+  configuration: --enable-cross-compile --cross-prefix=/home/slug/optware/oleg/toolchain/mipsel-linux-uclibc/gcc-4.1.1-uclibc-0.9.28/bin/mipsel-linux-uclibc- --arch=mipsel --disable-encoder=snow --disable-decoder=snow --enable-shared --disable-static --enable-gpl --enable-postproc --prefix=/opt
+  libavutil version: 49.6.0
+  libavcodec version: 51.54.0
+  libavformat version: 52.13.0
+  libavdevice version: 52.0.0
+  built on Nov 23 2010 22:56:54, gcc: 4.1.1
+Input #0, video4linux, from '/dev/v4l/video0':
+  Duration: N/A, bitrate: 921 kb/s
+    Stream #0.0: Video: rawvideo, yuv420p, 320x240, 921 kb/s,  1.00 tb(r)
+Unable to find a suitable output format for 'test1.jpeg'
+
+
+/tmp # /opt/bin/ffmpeg -r 1 -f video4linux -s 320x240 -i /dev/v4l/video0 -t 5 test1.avi
+FFmpeg version UNKNOWN, Copyright (c) 2000-2008 Fabrice Bellard, et al.
+  configuration: --enable-cross-compile --cross-prefix=/home/slug/optware/oleg/toolchain/mipsel-linux-uclibc/gcc-4.1.1-uclibc-0.9.28/bin/mipsel-linux-uclibc- --arch=mipsel --disable-encoder=snow --disable-decoder=snow --enable-shared --disable-static --enable-gpl --enable-postproc --prefix=/opt
+  libavutil version: 49.6.0
+  libavcodec version: 51.54.0
+  libavformat version: 52.13.0
+  libavdevice version: 52.0.0
+  built on Nov 23 2010 22:56:54, gcc: 4.1.1
+Input #0, video4linux, from '/dev/v4l/video0':
+  Duration: N/A, bitrate: 921 kb/s
+    Stream #0.0: Video: rawvideo, yuv420p, 320x240, 921 kb/s,  1.00 tb(r)
+File 'test1.avi' already exists. Overwrite ? [y/N] y
+Output #0, avi, to 'test1.avi':
+    Stream #0.0: Video: mpeg4, yuv420p, 320x240, q=2-31, 200 kb/s,  1.00 tb(c)
+Stream mapping:
+  Stream #0.0 -> #0.0
+Press [q] to stop encoding
+frame=    0 fps=  0 q=0.0 Lsize=       6kB time=10000000000.0 bitrate=   0.0kbits/s    
+video:0kB audio:0kB global headers:0kB muxing overhead inf%
+
+
+/tmp/usbmounts/sda1/PUBLIC/IPK # ./hellov4l2 -d /dev/v4l/video0
+[1.open_device] open /dev/v4l/video0 
+[2.init_device] /dev/v4l/video0 is V4L2 device
+[2.init_device] /dev/v4l/video0 is video capture device
+/dev/v4l/video0 cap.driver is uvcvideo
+/dev/v4l/video0 cap.card is USB2.0 Camera
+/dev/v4l/video0 cap.version is 256
+/dev/v4l/video0 is capable of streaming i/o
+Format desc = YUV 4:2:2 (YUYV)
+/dev/v4l/video0 supports 'YUV 4:2:2 (YUYV)' (raw format, V4L2_PIX_FMT_YUYV)
+select timeout
+
+
+
+
+
+
+
