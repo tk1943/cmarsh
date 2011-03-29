@@ -1,7 +1,21 @@
 cmarsh 2011 
 靈魂破xXx黑森森^_^你笑顏:-)陽光灑
 
-收集 usb webcam 在 ibt 1283 機器上的改機資訊
+收集 usb webcam 在 ibt 1073/1283 機器( linux 2.6.12 venus realtek media player system)上的改機資訊
+
+/ # uname -a
+Linux Venus 2.6.12.6-VENUS #82 Wed Sep 15 10:16:35 CST 2010 mips unknown
+
+http://www.i-bt.com.tw/index.html
+
 
 2011-0329
 IR - Internet RSS - http-local-php - ffmpeg - /dev/v4l/video0 - /tmp/usbmounts/sda1/cmarsh/xxx.avi - curl-online-http-gateway
+
+http://www.cnitblog.com/gouzhuang/archive/2010/05/14/65956.aspx
+
+
+2011-0328
+
+ktcccd3051/uvc driver/ffmpeg not working
+logitech quick cam messenger/qcmessenger driver/ffmpeg working

@@ -1,0 +1,120 @@
+ibt 1283 pvr with fm v199
+
+http://www.i-bt.com.tw/IBT-1283PVR.html
+
+http://www.cnitblog.com/gouzhuang/archive/2010/05/14/65956.aspx
+
+/ # ls /dev/shadow_irrp 
+/dev/shadow_irrp
+
+/ # cat /usr/local/etc/opt/myko/rcPreDvd 
+insmod /usr/local/etc/opt/myko/venus_ir_new.ko
+insmod /usr/local/etc/opt/myko/videodev.ko
+insmod /usr/local/etc/opt/myko/v4l1-compat.ko
+insmod /usr/local/etc/opt/myko/v4l2-common.ko
+insmod /usr/local/etc/opt/myko/qcmessenger.ko
+mount --bind /usr/local/etc/opt /opt
+/opt/etc/init.d/S80lighttpd start
+
+irdump.c from http://www.hdpfans.com/thread-847-3-1.html
+
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdlib.h>
+
+int main(int argc, char *argv[]) {
+        int fd_irrp;
+        unsigned int key;
+        ssize_t count;
+        fd_irrp = open("/dev/shadow_irrp", O_RDONLY);
+        if(fd_irrp == -1) {
+                fprintf(stderr, "Unable to open /dev/shadow_irrp\n");
+                exit(-1);
+        }
+        while(1) {
+                count = read(fd_irrp, &key, sizeof(int));
+                if(count <= 0) exit(-1);
+                printf("%d bytes read. code=0x%x\n", count, key);
+        }
+}
+
+/ # ls -al /usr/local/etc/opt/myko/
+drwxr-xr-x    1 root     root         2048 Mar 29 11:31 .
+drwxr-xr-x    1 root     root         2048 Mar 29 10:46 ..
+-rwxr-xr-x    1 root     root       371812 Mar 29 10:46 gspca.ko
+-rwxr-xr-x    1 root     root         7896 Mar 29 11:31 irdump
+-rwxr-xr-x    1 root     root       546475 Mar 29 10:46 qcmessenger.ko
+-rwxr-xr-x    1 root     root          299 Mar 29 03:27 rcPreDvd
+-rwxr-xr-x    1 root     root        36228 Mar 29 10:46 stv680.ko
+-rwxr-xr-x    1 root     root        39636 Mar 29 10:46 usbvideo.ko
+-rwxr-xr-x    1 root     root        89424 Mar 29 10:46 uvcvideo.ko
+-rwxr-xr-x    1 root     root        16592 Mar 29 10:46 v4l1-compat.ko
+-rwxr-xr-x    1 root     root         9132 Mar 29 10:46 v4l2-common.ko
+-rwxr-xr-x    1 root     root        14656 Mar 29 03:24 venus_ir_new.ko
+-rwxr-xr-x    1 root     root        14020 Mar 29 10:46 videodev.ko
+
+
+/ # /usr/local/etc/opt/myko/irdump 
+
+RED/紅/碟片選單
+4 bytes read. code=0xa857ff00
+
+GREEN/綠/聲音多重
+4 bytes read. code=0xa758ff00
+
+YELLOW/黃/字幕
+4 bytes read. code=0xa659ff00
+
+BLUE/藍/視角
+4 bytes read. code=0xa55aff00
+
+藍底房屋/選單
+4 bytes read. code=0xec13ff00
+
+數字鍵右下瀏覽鍵
+4 bytes read. code=0xf10eff00
+
+回上層
+4 bytes read. code=0xe916ff00
+
+OK
+4 bytes read. code=0xe51aff00
+
+NUM 1
+4 bytes read. code=0xfe01ff00
+
+NUM 2
+4 bytes read. code=0xfd02ff00
+
+NUM 3
+4 bytes read. code=0xfc03ff00
+
+NUM 4
+4 bytes read. code=0xfb04ff00
+
+NUM 5
+4 bytes read. code=0xfa05ff00
+
+NUM 6
+4 bytes read. code=0xf906ff00
+
+NUM 7
+4 bytes read. code=0xf807ff00
+
+NUM 8
+4 bytes read. code=0xf708ff00
+
+NUM 9
+4 bytes read. code=0xf609ff00
+
+NUM 0
+4 bytes read. code=0xff00ff00
+
+
+藍底房屋/選單 code=0xec13ff00
+echo 'ec13ff00' > /sys/devices/platform/VenusIR/fakekey
+
+other button see http://www.hdpfans.com/thread-10741-1-1.html
+
+

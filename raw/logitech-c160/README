@@ -1,0 +1,410 @@
+dmesg
+
+[31136.751130] usb 3-3: new high speed USB device using ehci_hcd and address 2
+[31137.003222] usb 3-3: New USB device found, idVendor=046d, idProduct=0824
+[31137.003231] usb 3-3: New USB device strings: Mfr=0, Product=0, SerialNumber=2
+[31137.003238] usb 3-3: SerialNumber: E6C6F2B0
+[31137.141119] Linux video capture interface: v2.00
+[31137.161198] uvcvideo: Found UVC 1.00 device <unnamed> (046d:0824)
+[31137.202349] input: UVC Camera (046d:0824) as /devices/pci0000:00/0000:00:16.2/usb3/3-3/3-3:1.0/input/input5
+[31137.202499] usbcore: registered new interface driver uvcvideo
+[31137.202504] USB Video Class driver (v1.0.0)
+[31137.473384] usbcore: registered new interface driver snd-usb-audio
+
+
+lsusb
+
+Bus 003 Device 002: ID 046d:0824 Logitech, Inc. 
+
+$ v4l-info 
+
+### v4l2 device info [/dev/video0] ###
+general info
+    VIDIOC_QUERYCAP
+	driver                  : "uvcvideo"
+	card                    : "UVC Camera (046d:0824)"
+	bus_info                : "usb-0000:00:16.2-3"
+	version                 : 1.0.0
+	capabilities            : 0x4000001 [VIDEO_CAPTURE,STREAMING]
+
+standards
+
+inputs
+    VIDIOC_ENUMINPUT(0)
+	index                   : 0
+	name                    : "Camera 1"
+	type                    : CAMERA
+	audioset                : 0
+	tuner                   : 0
+	std                     : 0x0 []
+	status                  : 0x0 []
+
+video capture
+    VIDIOC_ENUM_FMT(0,VIDEO_CAPTURE)
+	index                   : 0
+	type                    : VIDEO_CAPTURE
+	flags                   : 0
+	description             : "YUV 4:2:2 (YUYV)"
+	pixelformat             : 0x56595559 [YUYV]
+    VIDIOC_ENUM_FMT(1,VIDEO_CAPTURE)
+	index                   : 1
+	type                    : VIDEO_CAPTURE
+	flags                   : 1
+	description             : "MJPEG"
+	pixelformat             : 0x47504a4d [MJPG]
+    VIDIOC_G_FMT(VIDEO_CAPTURE)
+	type                    : VIDEO_CAPTURE
+	fmt.pix.width           : 640
+	fmt.pix.height          : 480
+	fmt.pix.pixelformat     : 0x56595559 [YUYV]
+	fmt.pix.field           : NONE
+	fmt.pix.bytesperline    : 1280
+	fmt.pix.sizeimage       : 614400
+	fmt.pix.colorspace      : SRGB
+	fmt.pix.priv            : 0
+
+controls
+    VIDIOC_QUERYCTRL(BASE+0)
+	id                      : 9963776
+	type                    : INTEGER
+	name                    : "Brightness"
+	minimum                 : 0
+	maximum                 : 255
+	step                    : 1
+	default_value           : 128
+	flags                   : 0
+    VIDIOC_QUERYCTRL(BASE+1)
+	id                      : 9963777
+	type                    : INTEGER
+	name                    : "Contrast"
+	minimum                 : 0
+	maximum                 : 255
+	step                    : 1
+	default_value           : 32
+	flags                   : 0
+    VIDIOC_QUERYCTRL(BASE+2)
+	id                      : 9963778
+	type                    : INTEGER
+	name                    : "Saturation"
+	minimum                 : 0
+	maximum                 : 255
+	step                    : 1
+	default_value           : 38
+	flags                   : 0
+
+	
+	[lin@localhost ~]$ guvcview -v
+guvcview 1.4.4
+video_device: /dev/video0
+vid_sleep: 0
+cap_meth: 1
+resolution: 320 x 240
+windowsize: 512 x 700
+vert pane: 578
+spin behavior: 0
+mode: yv12
+fps: 1/30
+Display Fps: 1
+bpp: 32
+hwaccel: 1
+avi_format: 0
+sound: 1
+sound Device: 0
+sound samp rate: 0
+sound Channels: 0
+Sound delay: 0 nanosec
+Sound Format: 80 
+Pan Step: 2 degrees
+Tilt Step: 2 degrees
+Video Filter Flags: 0
+image inc: 0
+profile(default):/home/lin/default.gpfl
+starting portaudio...
+Cannot connect to server socket err = 沒有此一檔案或目錄
+Cannot connect to server socket
+jack server is not running or cannot be started
+language catalog=> dir:/usr/share/locale type:UTF-8 lang:zh_TW.utf8 cat:guvcview.mo
+yv12: setting format to 842094169
+capture method = 1
+video device: /dev/video0 
+Device Node Path: /dev/video0
+  VID/PID: 046d 0824
+  (null)
+  (null)
+  serial: E6C6F2B0
+Init. UVC Camera (046d:0824) (location: usb-0000:00:16.2-3)
+{ pixelformat = 'YUYV', description = 'YUV 4:2:2 (YUYV)' }
+{ discrete: width = 640, height = 480 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 160, height = 120 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 176, height = 144 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 320, height = 240 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 352, height = 288 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 640, height = 360 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 640, height = 400 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ pixelformat = 'MJPG', description = 'MJPEG' }
+{ discrete: width = 640, height = 480 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 160, height = 120 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 176, height = 144 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 320, height = 240 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 352, height = 288 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 640, height = 360 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 640, height = 400 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ pixelformat = 'RGB3', description = 'RGB3' }
+{ discrete: width = 640, height = 480 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 160, height = 120 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 176, height = 144 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 320, height = 240 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 352, height = 288 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 640, height = 360 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 640, height = 400 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ pixelformat = 'BGR3', description = 'BGR3' }
+{ discrete: width = 640, height = 480 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 160, height = 120 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 176, height = 144 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 320, height = 240 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 352, height = 288 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 640, height = 360 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 640, height = 400 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ pixelformat = 'YU12', description = 'YU12' }
+{ discrete: width = 640, height = 480 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 160, height = 120 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 176, height = 144 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 320, height = 240 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 352, height = 288 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 640, height = 360 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 640, height = 400 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ pixelformat = 'YV12', description = 'YV12' }
+{ discrete: width = 640, height = 480 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 160, height = 120 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 176, height = 144 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 320, height = 240 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 352, height = 288 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 640, height = 360 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+{ discrete: width = 640, height = 400 }
+	Time interval between frame: 1/30, 1/25, 1/20, 1/15, 1/10, 1/5, 
+vid:046d 
+pid:0824 
+driver:uvcvideo
+Adding control for Pan (relative)
+UVCIOC_CTRL_ADD - Error: 檔案已存在
+checking format: 842094169
+fps is set to 1/30
+drawing controls
+
+control[0]: 0x980900  Brightness, 0:255:1, default 128
+control[0]: 0x980901  Contrast, 0:255:1, default 32
+control[0]: 0x980902  Saturation, 0:255:1, default 38
+control[0]: 0x98090c  White Balance Temperature, Auto, 0:1:1, default 1
+control[0]: 0x980913  Gain, 0:255:1, default 0
+control[0]: 0x980918  Power Line Frequency, 0:2:1, default 2
+control[0]: 0x98091a  White Balance Temperature, 0:10000:10, default 4000
+control[0]: 0x98091b  Sharpness, 0:255:1, default 20
+control[0]: 0x98091c  Backlight Compensation, 0:1:1, default 1
+control[0]: 0x9a0901  Exposure, Auto, 0:3:1, default 3
+control[0]: 0x9a0902  Exposure (Absolute), 1:10000:1, default 166
+control[0]: 0x9a0903  Exposure, Auto Priority, 0:1:1, default 0
+control[0]: 0xa046d05  LED1 Mode, 0:3:1, default 3
+control[0]: 0xa046d06  LED1 Frequency, 0:255:1, default 0
+control[0]: 0xa046d71  Disable video processing, 0:1:1, default 0
+control[0]: 0xa046d72  Raw bits per pixel, 0:1:1, default 0
+resolutions of format(6) = 7 
+frame rates of 4º resolution=6 
+fps is set to 1/30
+Def. Res: 3  numb. fps:6
+--------------------------------------- device #0
+Name                     = HDA ATI SB: ALC662 rev1 Analog (hw:0,0)
+Host API                 = ALSA
+Max inputs = 2, Max outputs = 2
+Def. low input latency   =    0.012
+Def. low output latency  =    0.012
+Def. high input latency  =    0.046
+Def. high output latency =    0.046
+Def. sample rate         = 44100.00
+--------------------------------------- device #1
+Name                     = HDA ATI SB: ALC662 rev1 Digital (hw:0,1)
+Host API                 = ALSA
+Max inputs = 0, Max outputs = 2
+Def. low input latency   =   -1.000
+Def. low output latency  =    0.012
+Def. high input latency  =   -1.000
+Def. high output latency =    0.046
+Def. sample rate         = 44100.00
+--------------------------------------- device #2
+Name                     = HDA ATI HDMI: ATI HDMI (hw:1,3)
+Host API                 = ALSA
+Max inputs = 0, Max outputs = 2
+Def. low input latency   =   -1.000
+Def. low output latency  =    0.012
+Def. high input latency  =   -1.000
+Def. high output latency =    0.046
+Def. sample rate         = 44100.00
+--------------------------------------- device #3
+Name                     = USB Device 0x46d:0x824: USB Audio (hw:2,0)
+Host API                 = ALSA
+Max inputs = 1, Max outputs = 0
+Def. low input latency   =    0.011
+Def. low output latency  =   -1.000
+Def. high input latency  =    0.043
+Def. high output latency =   -1.000
+Def. sample rate         = 48000.00
+--------------------------------------- device #4
+Name                     = front
+Host API                 = ALSA
+Max inputs = 0, Max outputs = 2
+Def. low input latency   =   -1.000
+Def. low output latency  =    0.012
+Def. high input latency  =   -1.000
+Def. high output latency =    0.046
+Def. sample rate         = 44100.00
+--------------------------------------- device #5
+Name                     = surround40
+Host API                 = ALSA
+Max inputs = 0, Max outputs = 2
+Def. low input latency   =   -1.000
+Def. low output latency  =    0.012
+Def. high input latency  =   -1.000
+Def. high output latency =    0.046
+Def. sample rate         = 44100.00
+--------------------------------------- device #6
+Name                     = surround51
+Host API                 = ALSA
+Max inputs = 0, Max outputs = 2
+Def. low input latency   =   -1.000
+Def. low output latency  =    0.012
+Def. high input latency  =   -1.000
+Def. high output latency =    0.046
+Def. sample rate         = 44100.00
+--------------------------------------- device #7
+Name                     = surround71
+Host API                 = ALSA
+Max inputs = 0, Max outputs = 2
+Def. low input latency   =   -1.000
+Def. low output latency  =    0.012
+Def. high input latency  =   -1.000
+Def. high output latency =    0.046
+Def. sample rate         = 44100.00
+--------------------------------------- device #8
+Name                     = iec958
+Host API                 = ALSA
+Max inputs = 0, Max outputs = 2
+Def. low input latency   =   -1.000
+Def. low output latency  =    0.012
+Def. high input latency  =   -1.000
+Def. high output latency =    0.046
+Def. sample rate         = 44100.00
+--------------------------------------- device #9
+Name                     = spdif
+Host API                 = ALSA
+Max inputs = 0, Max outputs = 2
+Def. low input latency   =   -1.000
+Def. low output latency  =    0.012
+Def. high input latency  =   -1.000
+Def. high output latency =    0.046
+Def. sample rate         = 44100.00
+--------------------------------------- device #10
+Name                     = pulse
+Host API                 = ALSA
+Max inputs = 32, Max outputs = 32
+Def. low input latency   =    0.012
+Def. low output latency  =    0.012
+Def. high input latency  =    0.046
+Def. high output latency =    0.046
+Def. sample rate         = 44100.00
+--------------------------------------- device #11
+Name                     = dmix
+Host API                 = ALSA
+Max inputs = 0, Max outputs = 2
+Def. low input latency   =   -1.000
+Def. low output latency  =    0.043
+Def. high input latency  =   -1.000
+Def. high output latency =    0.043
+Def. sample rate         = 48000.00
+--------------------------------------- device #12
+[ Default Input, Default Output ]
+Name                     = default
+Host API                 = ALSA
+Max inputs = 32, Max outputs = 32
+Def. low input latency   =    0.012
+Def. low output latency  =    0.012
+Def. high input latency  =    0.046
+Def. high output latency =    0.046
+Def. sample rate         = 44100.00
+----------------------------------------------
+SampleRate:0 Channels:0
+Video driver: x11
+A window manager is available
+(Desktop resolution = 3840x1080)
+Checking video mode 320x240@32bpp : OK 
+setting new resolution (640 x 480)
+cleaning buffer allocations
+checking format: 842094169
+(Desktop resolution = 3840x1080)
+Checking video mode 640x480@32bpp : OK 
+yuv overlay created (640x480).
+setting new resolution (640 x 480)
+cleaning buffer allocations
+checking format: 1196444237
+VIDIOC_G_COMP:: 不適用的引數
+   compression control not supported
+(Desktop resolution = 3840x1080)
+Checking video mode 640x480@32bpp : OK 
+yuv overlay created (640x480).
+setting new resolution (640 x 480)
+cleaning buffer allocations
+checking format: 1448695129
+(Desktop resolution = 3840x1080)
+Checking video mode 640x480@32bpp : OK 
+yuv overlay created (640x480).
+Shuting Down Thread
+Thread terminated...
+cleaning Thread allocations: 100%
+SDL Quit
+Video Thread finished
+write /home/lin/.guvcviewrc OK
+free audio mutex
+closed v4l2 strutures
+free controls
+free controls - vidState
+cleaned allocations - 100%
+Closing portaudio ..
