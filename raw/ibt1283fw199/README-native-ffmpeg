@@ -1,0 +1,721 @@
+native build at ibt1283 fw 199
+
+ffmpeg 0.5.4 configure
+
+1. mktemp issue
+
+modify configure
+
+
+
+2. pr issue
+
+which echo
+cd bin
+cp echo pr
+
+
+
+ffmpeg make
+
+modify libavutil/internal.h
+
+#if !HAVE_LLRINT
+#undef llrint
+#define llrint(x) ((long long)rint(x))
+#endif /* HAVE_LLRINT */
+
+
+#if !HAVE_TRUNCF                                                                
+#undef truncf                                                                   
+#define truncf(x)((x>0) ? floor(x) : ceil(x))                                   
+#endif /* HAVE_TRUNCF */
+
+
+
+
+
+/build/ffmpeg-0.5.4/libavcodec/libavcodec.a(aac.o): In function `flt16_round':
+/build/ffmpeg-0.5.4/libavcodec/aac.c:935: undefined reference to `roundf'
+/build/ffmpeg-0.5.4/libavcodec/libavcodec.a(aac.o): In function `flt16_trunc':
+/build/ffmpeg-0.5.4/libavcodec/aac.c:949: undefined reference to `truncf'
+/build/ffmpeg-0.5.4/libavcodec/aac.c:949: undefined reference to `truncf'
+/build/ffmpeg-0.5.4/libavcodec/aac.c:949: undefined reference to `truncf'
+/build/ffmpeg-0.5.4/libavcodec/aac.c:949: undefined reference to `truncf'
+/build/ffmpeg-0.5.4/libavcodec/aac.c:949: undefined reference to `truncf'
+/build/ffmpeg-0.5.4/libavcodec/libavcodec.a(aac.o):/build/ffmpeg-0.5.4/libavcodec/aac.c:949: more undefined references to `truncf' follow
+/build/ffmpeg-0.5.4/libavcodec/libavcodec.a(atrac3.o): In function `atrac3_decode_frame':
+/build/ffmpeg-0.5.4/libavcodec/atrac3.c:914: undefined reference to `round'
+/build/ffmpeg-0.5.4/libavcodec/atrac3.c:913: undefined reference to `round'
+/build/ffmpeg-0.5.4/libavcodec/atrac3.c:908: undefined reference to `round'
+collect2: ld returned 1 exit status
+make: *** [ffmpeg_g] Error 1
+
+
+put this to aac.c
+
+static av_always_inline av_const float truncfx(float x)
+{
+    return (x > 0) ? floor(x) : ceil(x);
+}
+
+
+static av_always_inline av_const float roundfx(float x)
+{
+    return (x>0)? floor(x+0.5):ceil(x-0.5);
+}
+
+static av_always_inline av_const double roundx(double x)
+{
+     return (x > 0) ? floor(x + 0.5) : ceil(x - 0.5);
+ }                         
+
+/build/ffmpeg-0.5.4/libavcodec/libavcodec.a(aac.o): In function `flt16_round':
+/build/ffmpeg-0.5.4/libavcodec/aac.c:935: undefined reference to `roundf'
+/build/ffmpeg-0.5.4/libavcodec/libavcodec.a(atrac3.o): In function `atrac3_decode_frame':
+/build/ffmpeg-0.5.4/libavcodec/atrac3.c:914: undefined reference to `round'
+/build/ffmpeg-0.5.4/libavcodec/atrac3.c:913: undefined reference to `round'
+/build/ffmpeg-0.5.4/libavcodec/atrac3.c:908: undefined reference to `round'
+collect2: ld returned 1 exit status
+
+
+/build/ffmpeg-0.5.4 # ./ffmpeg -v
+FFmpeg version 0.5.4, Copyright (c) 2000-2009 Fabrice Bellard, et al.
+  configuration: 
+  libavutil     49.15. 0 / 49.15. 0
+  libavcodec    52.20. 1 / 52.20. 1
+  libavformat   52.31. 0 / 52.31. 0
+  libavdevice   52. 1. 0 / 52. 1. 0
+  built on Mar 31 2011 16:36:25, gcc: 4.4.2
+./ffmpeg: missing argument for option '-v'
+
+/build/ffmpeg-0.5.4 # ./ffmpeg -formats
+FFmpeg version 0.5.4, Copyright (c) 2000-2009 Fabrice Bellard, et al.
+  configuration: 
+  libavutil     49.15. 0 / 49.15. 0
+  libavcodec    52.20. 1 / 52.20. 1
+  libavformat   52.31. 0 / 52.31. 0
+  libavdevice   52. 1. 0 / 52. 1. 0
+  built on Mar 31 2011 16:36:25, gcc: 4.4.2
+File formats:
+  E 3g2             3GP2 format
+  E 3gp             3GP format
+ D  4xm             4X Technologies format
+ D  IFF             IFF format
+ D  ISS             Funcom ISS format
+ D  MTV             MTV format
+ DE RoQ             raw id RoQ format
+ D  aac             raw ADTS AAC
+ DE ac3             raw AC-3
+  E adts            ADTS AAC
+ DE aiff            Audio IFF
+ DE alaw            PCM A-law format
+ DE amr             3GPP AMR file format
+ D  apc             CRYO APC format
+ D  ape             Monkey's Audio
+ DE asf             ASF format
+  E asf_stream      ASF format
+ DE ass             SSA/ASS format
+ DE au              SUN AU format
+ DE avi             AVI format
+  E avm2            Flash 9 (AVM2) format
+ D  avs             AVS format
+ D  bethsoftvid     Bethesda Softworks VID format
+ D  bfi             Brute Force & Ignorance
+ D  c93             Interplay C93
+ D  cavsvideo       raw Chinese AVS video
+  E crc             CRC testing format
+ DE daud            D-Cinema audio format
+ DE dirac           raw Dirac
+ DE dnxhd           raw DNxHD (SMPTE VC-3)
+ D  dsicin          Delphine Software International CIN format
+ DE dts             raw DTS
+ DE dv              DV video format
+ D  dv1394          DV1394 A/V grab
+  E dvd             MPEG-2 PS format (DVD VOB)
+ D  dxa             DXA
+ D  ea              Electronic Arts Multimedia Format
+ D  ea_cdata        Electronic Arts cdata
+ DE eac3            raw E-AC-3
+ DE f32be           PCM 32 bit floating-point big-endian format
+ DE f32le           PCM 32 bit floating-point little-endian format
+ DE f64be           PCM 64 bit floating-point big-endian format
+ DE f64le           PCM 64 bit floating-point little-endian format
+ DE ffm             FFM (FFserver live feed) format
+ D  film_cpk        Sega FILM/CPK format
+ DE flac            raw FLAC
+ D  flic            FLI/FLC/FLX animation format
+ DE flv             FLV format
+  E framecrc        framecrc testing format
+  E gif             GIF Animation
+ D  gsm             raw GSM
+ DE gxf             GXF format
+ DE h261            raw H.261
+ DE h263            raw H.263
+ DE h264            raw H.264 video format
+ D  idcin           id Cinematic format
+ DE image2          image2 sequence
+ DE image2pipe      piped image2 sequence
+ D  ingenient       raw Ingenient MJPEG
+ D  ipmovie         Interplay MVE format
+  E ipod            iPod H.264 MP4 format
+ D  lmlm4           lmlm4 raw format
+ DE m4v             raw MPEG-4 video format
+ DE matroska        Matroska file format
+ DE mjpeg           raw MJPEG video
+ D  mlp             raw MLP
+ D  mm              American Laser Games MM format
+ DE mmf             Yamaha SMAF
+  E mov             MOV format
+ D  mov,mp4,m4a,3gp,3g2,mj2 QuickTime/MPEG-4/Motion JPEG 2000 format
+  E mp2             MPEG audio layer 2
+ DE mp3             MPEG audio layer 3
+  E mp4             MP4 format
+ D  mpc             Musepack
+ D  mpc8            Musepack SV8
+ DE mpeg            MPEG-1 System format
+  E mpeg1video      raw MPEG-1 video
+  E mpeg2video      raw MPEG-2 video
+ DE mpegts          MPEG-2 transport stream format
+ D  mpegtsraw       MPEG-2 raw transport stream format
+ D  mpegvideo       raw MPEG video
+  E mpjpeg          MIME multipart JPEG format
+ D  msnwctcp        MSN TCP Webcam stream
+ DE mulaw           PCM mu-law format
+ D  mvi             Motion Pixels MVI format
+ DE mxf             Material eXchange Format
+  E mxf_d10         Material eXchange Format, D-10 Mapping
+ D  nc              NC camera feed format
+ D  nsv             Nullsoft Streaming Video
+  E null            raw null video format
+ DE nut             NUT format
+ D  nuv             NuppelVideo format
+ DE ogg             Ogg
+ D  oma             Sony OpenMG audio
+ DE oss             Open Sound System playback
+  E psp             PSP MP4 format
+ D  psxstr          Sony Playstation STR format
+ D  pva             TechnoTrend PVA file and stream format
+ D  r3d             REDCODE R3D format
+ DE rawvideo        raw video format
+  E rcv             VC-1 test bitstream
+ D  redir           Redirector format
+ D  rl2             RL2 format
+ DE rm              RealMedia format
+ D  rpl             RPL/ARMovie format
+  E rtp             RTP output format
+ D  rtsp            RTSP input format
+ DE s16be           PCM signed 16 bit big-endian format
+ DE s16le           PCM signed 16 bit little-endian format
+ DE s24be           PCM signed 24 bit big-endian format
+ DE s24le           PCM signed 24 bit little-endian format
+ DE s32be           PCM signed 32 bit big-endian format
+ DE s32le           PCM signed 32 bit little-endian format
+ DE s8              PCM signed 8 bit format
+ D  sdp             SDP
+ D  shn             raw Shorten
+ D  siff            Beam Software SIFF
+ D  smk             Smacker video
+ D  sol             Sierra SOL format
+  E svcd            MPEG-2 PS format (VOB)
+ DE swf             Flash format
+ D  thp             THP
+ D  tiertexseq      Tiertex Limited SEQ format
+ D  tta             True Audio
+ D  txd             Renderware TeXture Dictionary
+ DE u16be           PCM unsigned 16 bit big-endian format
+ DE u16le           PCM unsigned 16 bit little-endian format
+ DE u24be           PCM unsigned 24 bit big-endian format
+ DE u24le           PCM unsigned 24 bit little-endian format
+ DE u32be           PCM unsigned 32 bit big-endian format
+ DE u32le           PCM unsigned 32 bit little-endian format
+ DE u8              PCM unsigned 8 bit format
+ D  vc1             raw VC-1
+ D  vc1test         VC-1 test bitstream format
+  E vcd             MPEG-1 System format (VCD)
+ D  video4linux     Video4Linux device grab
+ D  video4linux2    Video4Linux2 device grab
+ D  vmd             Sierra VMD format
+  E vob             MPEG-2 PS format (VOB)
+ DE voc             Creative Voice file format
+ DE wav             WAV format
+ D  wc3movie        Wing Commander III movie format
+ D  wsaud           Westwood Studios audio format
+ D  wsvqa           Westwood Studios VQA format
+ D  wv              WavPack
+ D  xa              Maxis XA File Format
+ DE yuv4mpegpipe    YUV4MPEG pipe format
+
+Codecs:
+ D V    4xm             4X Movie
+ D V D  8bps            QuickTime 8BPS video
+ D A    8svx_exp        8SVX exponential
+ D A    8svx_fib        8SVX fibonacci
+ D A    aac             Advanced Audio Coding
+ D V D  aasc            Autodesk RLE
+ DEA    ac3             ATSC A/52A (AC-3)
+ D A    adpcm_4xm       ADPCM 4X Movie
+ DEA    adpcm_adx       SEGA CRI ADX ADPCM
+ D A    adpcm_ct        ADPCM Creative Technology
+ D A    adpcm_ea        ADPCM Electronic Arts
+ D A    adpcm_ea_maxis_xa ADPCM Electronic Arts Maxis CDROM XA
+ D A    adpcm_ea_r1     ADPCM Electronic Arts R1
+ D A    adpcm_ea_r2     ADPCM Electronic Arts R2
+ D A    adpcm_ea_r3     ADPCM Electronic Arts R3
+ D A    adpcm_ea_xas    ADPCM Electronic Arts XAS
+ D A    adpcm_ima_amv   ADPCM IMA AMV
+ D A    adpcm_ima_dk3   ADPCM IMA Duck DK3
+ D A    adpcm_ima_dk4   ADPCM IMA Duck DK4
+ D A    adpcm_ima_ea_eacs ADPCM IMA Electronic Arts EACS
+ D A    adpcm_ima_ea_sead ADPCM IMA Electronic Arts SEAD
+ D A    adpcm_ima_iss   ADPCM IMA Funcom ISS
+ DEA    adpcm_ima_qt    ADPCM IMA QuickTime
+ D A    adpcm_ima_smjpeg ADPCM IMA Loki SDL MJPEG
+ DEA    adpcm_ima_wav   ADPCM IMA WAV
+ D A    adpcm_ima_ws    ADPCM IMA Westwood
+ DEA    adpcm_ms        ADPCM Microsoft
+ D A    adpcm_sbpro_2   ADPCM Sound Blaster Pro 2-bit
+ D A    adpcm_sbpro_3   ADPCM Sound Blaster Pro 2.6-bit
+ D A    adpcm_sbpro_4   ADPCM Sound Blaster Pro 4-bit
+ DEA    adpcm_swf       ADPCM Shockwave Flash
+ D A    adpcm_thp       ADPCM Nintendo Gamecube THP
+ D A    adpcm_xa        ADPCM CDROM XA
+ DEA    adpcm_yamaha    ADPCM Yamaha
+ DEA    alac            ALAC (Apple Lossless Audio Codec)
+ D V    amv             AMV Video
+ D A    ape             Monkey's Audio
+ DEV D  asv1            ASUS V1
+ DEV D  asv2            ASUS V2
+ D A    atrac3          Atrac 3 (Adaptive TRansform Acoustic Coding 3)
+ D V D  avs             AVS (Audio Video Standard) video
+ D V    bethsoftvid     Bethesda VID video
+ D V    bfi             Brute Force & Ignorance
+ DEV    bmp             BMP image
+ D V D  c93             Interplay C93
+ D V D  camstudio       CamStudio
+ D V D  camtasia        TechSmith Screen Capture Codec
+ D V D  cavs            Chinese AVS video (AVS1-P2, JiZhun profile)
+ D V D  cinepak         Cinepak
+ D V D  cljr            Cirrus Logic AccuPak
+ D A    cook            COOK
+ D V D  cyuv            Creative YUV (CYUV)
+ D A    dca             DCA (DTS Coherent Acoustics)
+ DEV D  dnxhd           VC3/DNxHD
+ D A    dsicinaudio     Delphine Software International CIN audio
+ D V D  dsicinvideo     Delphine Software International CIN video
+ DES    dvbsub          DVB subtitles
+ DES    dvdsub          DVD subtitles
+ DEV D  dvvideo         DV (Digital Video)
+ D V    dxa             Feeble Files/ScummVM DXA
+ D A    eac3            ATSC A/52B (AC-3, E-AC-3)
+ D V D  eacmv           Electronic Arts CMV video
+ D V D  eatgq           Electronic Arts TGQ video
+ D V    eatgv           Electronic Arts TGV video
+ D V D  eatqi           Electronic Arts TQI Video
+ D V D  escape124       Escape 124
+ DEV D  ffv1            FFmpeg codec #1
+ DEVSD  ffvhuff         Huffyuv FFmpeg variant
+ DEA    flac            FLAC (Free Lossless Audio Codec)
+ DEV D  flashsv         Flash Screen Video
+ D V D  flic            Autodesk Animator Flic video
+ DEVSD  flv             Flash Video (FLV)
+ D V D  fraps           Fraps
+ DEA    g726            G.726 ADPCM
+ DEV    gif             GIF (Graphics Interchange Format)
+ DEV D  h261            H.261
+ DEVSDT h263            H.263 / H.263-1996
+ D VSD  h263i           Intel H.263
+  EV    h263p           H.263+ / H.263-1998 / H.263 version 2
+ D V D  h264            H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10
+ DEVSD  huffyuv         Huffyuv / HuffYUV
+ D V D  idcinvideo      id Quake II CIN video
+ D A    imc             IMC (Intel Music Coder)
+ D V D  indeo2          Intel Indeo 2
+ D V    indeo3          Intel Indeo 3
+ D A    interplay_dpcm  DPCM Interplay
+ D V D  interplayvideo  Interplay MVE video
+ DEV D  jpegls          JPEG-LS
+ D V    kmvc            Karl Morton's video codec
+  EV    ljpeg           Lossless JPEG
+ D V D  loco            LOCO
+ D A    mace3           MACE (Macintosh Audio Compression/Expansion) 3:1
+ D A    mace6           MACE (Macintosh Audio Compression/Expansion) 6:1
+ D V D  mdec            Sony PlayStation MDEC (Motion DECoder)
+ D V D  mimic           Mimic
+ DEV D  mjpeg           MJPEG (Motion JPEG)
+ D V D  mjpegb          Apple MJPEG-B
+ D A    mlp             MLP (Meridian Lossless Packing)/TrueHD
+ D V D  mmvideo         American Laser Games MM Video
+ D V D  motionpixels    Motion Pixels video
+ D A    mp1             MP1 (MPEG audio layer 1)
+ DEA    mp2             MP2 (MPEG audio layer 2)
+ D A    mp3             MP3 (MPEG audio layer 3)
+ D A    mp3adu          ADU (Application Data Unit) MP3 (MPEG audio layer 3)
+ D A    mp3on4          MP3onMP4
+ D A    mpc7            Musepack SV7
+ D A    mpc8            Musepack SV8
+ DEVSDT mpeg1video      MPEG-1 video
+ DEVSDT mpeg2video      MPEG-2 video
+ DEVSDT mpeg4           MPEG-4 part 2
+ D VSDT mpegvideo       MPEG-1 video
+ DEVSD  msmpeg4         MPEG-4 part 2 Microsoft variant version 3
+ DEVSD  msmpeg4v1       MPEG-4 part 2 Microsoft variant version 1
+ DEVSD  msmpeg4v2       MPEG-4 part 2 Microsoft variant version 2
+ D V D  msrle           Microsoft RLE
+ D V D  msvideo1        Microsoft Video 1
+ D V D  mszh            LCL (LossLess Codec Library) MSZH
+ DEA    nellymoser      Nellymoser Asao
+ D V D  nuv             NuppelVideo/RTJPEG
+ DEV    pam             PAM (Portable AnyMap) image
+ DEV    pbm             PBM (Portable BitMap) image
+ DEA    pcm_alaw        PCM A-law
+ D A    pcm_dvd         PCM signed 20|24-bit big-endian
+ DEA    pcm_f32be       PCM 32-bit floating point big-endian
+ DEA    pcm_f32le       PCM 32-bit floating point little-endian
+ DEA    pcm_f64be       PCM 64-bit floating point big-endian
+ DEA    pcm_f64le       PCM 64-bit floating point little-endian
+ DEA    pcm_mulaw       PCM mu-law
+ DEA    pcm_s16be       PCM signed 16-bit big-endian
+ DEA    pcm_s16le       PCM signed 16-bit little-endian
+ D A    pcm_s16le_planar PCM 16-bit little-endian planar
+ DEA    pcm_s24be       PCM signed 24-bit big-endian
+ DEA    pcm_s24daud     PCM D-Cinema audio signed 24-bit
+ DEA    pcm_s24le       PCM signed 24-bit little-endian
+ DEA    pcm_s32be       PCM signed 32-bit big-endian
+ DEA    pcm_s32le       PCM signed 32-bit little-endian
+ DEA    pcm_s8          PCM signed 8-bit
+ DEA    pcm_u16be       PCM unsigned 16-bit big-endian
+ DEA    pcm_u16le       PCM unsigned 16-bit little-endian
+ DEA    pcm_u24be       PCM unsigned 24-bit big-endian
+ DEA    pcm_u24le       PCM unsigned 24-bit little-endian
+ DEA    pcm_u32be       PCM unsigned 32-bit big-endian
+ DEA    pcm_u32le       PCM unsigned 32-bit little-endian
+ DEA    pcm_u8          PCM unsigned 8-bit
+ DEA    pcm_zork        PCM Zork
+ D V    pcx             PC Paintbrush PCX image
+ DEV    pgm             PGM (Portable GrayMap) image
+ DEV    pgmyuv          PGMYUV (Portable GrayMap YUV) image
+ DEV    png             PNG image
+ DEV    ppm             PPM (Portable PixelMap) image
+ D V    ptx             V.Flash PTX image
+ D A    qcelp           QCELP / PureVoice
+ D A    qdm2            QDesign Music Codec 2
+ D V D  qdraw           Apple QuickDraw
+ D V D  qpeg            Q-team QPEG
+ DEV D  qtrle           QuickTime Animation (RLE) video
+ DEV    rawvideo        raw video
+ D A    real_144        RealAudio 1.0 (14.4K)
+ D A    real_288        RealAudio 2.0 (28.8K)
+ D V D  rl2             RL2 video
+ DEA    roq_dpcm        id RoQ DPCM
+ DEV D  roqvideo        id RoQ video
+ D V D  rpza            QuickTime video (RPZA)
+ DEV D  rv10            RealVideo 1.0
+ DEV D  rv20            RealVideo 2.0
+ D V D  rv30            RealVideo 3.0
+ D V D  rv40            RealVideo 4.0
+ DEV    sgi             SGI image
+ D A    shorten         Shorten
+ D A    smackaud        Smacker audio
+ D V    smackvid        Smacker video
+ D V D  smc             QuickTime Graphics (SMC)
+ DEV    snow            Snow
+ D A    sol_dpcm        DPCM Sol
+ DEA    sonic           Sonic
+  EA    sonicls         Sonic lossless
+ D V D  sp5x            Sunplus JPEG (SP5X)
+ D V    sunrast         Sun Rasterfile image
+ DEV D  svq1            Sorenson Vector Quantizer 1
+ D VSD  svq3            Sorenson Vector Quantizer 3
+ DEV    targa           Truevision Targa image
+ D V    theora          Theora
+ D V D  thp             Nintendo Gamecube THP video
+ D V D  tiertexseqvideo Tiertex Limited SEQ video
+ DEV    tiff            TIFF image
+ D V D  truemotion1     Duck TrueMotion 1.0
+ D V D  truemotion2     Duck TrueMotion 2.0
+ D A    truespeech      DSP Group TrueSpeech
+ D A    tta             True Audio (TTA)
+ D V    txd             Renderware TXD (TeXture Dictionary) image
+ D V D  ultimotion      IBM UltiMotion
+ D V    vb              Beam Software VB
+ D V    vc1             SMPTE VC-1
+ D V D  vcr1            ATI VCR1
+ D A    vmdaudio        Sierra VMD audio
+ D V D  vmdvideo        Sierra VMD video
+ D V    vmnc            VMware Screen Codec / VMware Video
+ DEA    vorbis          Vorbis
+ D V    vp3             On2 VP3
+ D V D  vp5             On2 VP5
+ D V D  vp6             On2 VP6
+ D V D  vp6a            On2 VP6 (Flash version, with alpha channel)
+ D V D  vp6f            On2 VP6 (Flash version)
+ D V D  vqavideo        Westwood Studios VQA (Vector Quantized Animation) video
+ D A    wavpack         WavPack
+ DEA    wmav1           Windows Media Audio 1
+ DEA    wmav2           Windows Media Audio 2
+ DEVSD  wmv1            Windows Media Video 7
+ DEVSD  wmv2            Windows Media Video 8
+ D V    wmv3            Windows Media Video 9
+ D V D  wnv1            Winnov WNV1
+ D A    ws_snd1         Westwood Audio (SND1)
+ D A    xan_dpcm        DPCM Xan
+ D V D  xan_wc3         Wing Commander III / Xan
+ D V D  xl              Miro VideoXL
+ D S    xsub            XSUB
+ DEV D  zlib            LCL (LossLess Codec Library) ZLIB
+ DEV    zmbv            Zip Motion Blocks Video
+
+Bitstream filters:
+ text2movsub remove_extra noise mov2textsub mp3decomp mp3comp mjpegadump imxdump h264_mp4toannexb dump_extra
+Supported file protocols:
+ file: gopher: http: pipe: rtp: tcp: udp:
+Frame size, frame rate abbreviations:
+ ntsc pal qntsc qpal sntsc spal film ntsc-film sqcif qcif cif 4cif
+
+Note, the names of encoders and decoders do not always match, so there are
+several cases where the above table shows encoder only or decoder only entries
+even though both encoding and decoding are supported. For example, the h263
+decoder corresponds to the h263 and h263p encoders, for file formats it is even
+worse.
+
+
+/ # /tmp/usbmounts/sdb1/toolchain-root/build/ffmpeg-0.5.4/ffmpeg -formats
+/tmp/usbmounts/sdb1/toolchain-root/build/ffmpeg-0.5.4/ffmpeg: can't load library 'libz.so.1'
+/ # find /opt -name libz.*
+/opt/lib/libz.so.1.2.5
+/opt/lib/libz.so
+/opt/lib/libz.so.1
+
+/ # /opt/bin/file ffmpeg 
+ffmpeg: ELF 32-bit LSB executable, MIPS, MIPS32 version 1 (SYSV), 
+dynamically linked (uses shared libs), with unknown capability 0xf41 = 0x756e6700, 
+with unknown capability 0x70100 = 0x3040000, stripped
+
+vi /usr/local/etc/ld.so.conf
+/lib
+/opt/lib
+
+reboot
+
+/tmp/usbmounts/sdb1/toolchain-root/build/ffmpeg-0.5.4/ffmpeg: can't load library 'libz.so.1'
+
+try to build static version
+
+/build/ffmpeg-0.5.4 # du -h ffmpeg
+5.9M    ffmpeg
+
+/build/ffmpeg-0.5.4 # ./configure --disable-ffserver --disable-ffplay
+
+/build/ffmpeg-0.5.4 # file ffmpeg
+ffmpeg: ELF 32-bit LSB executable, MIPS, MIPS32 version 1 (SYSV), 
+dynamically linked (uses shared libs), with unknown capability 0xf41 = 0x756e6700, 
+with unknown capability 0x70100 = 0x3040000, stripped
+
+/build/ffmpeg-0.5.4 # ldd ffmpeg
+        libz.so.1 => /usr/lib/libz.so.1 (0x2aabd000)
+        libm.so.0 => /lib/libm.so.0 (0x2aadf000)
+        libdl.so.0 => /lib/libdl.so.0 (0x2ab0a000)
+        libc.so.0 => /lib/libc.so.0 (0x2ab1c000)
+        ld-uClibc.so.0 => /lib/ld-uClibc.so.0 (0x2aaa8000)
+        
+# export LD_LIBRARY_PATH=/opt/lib:$LD_LIBRARY_PATH
+# ./ffmpeg -v
+./ffmpeg: can't resolve symbol 'posix_memalign'
+  
+  
+Also, ffmpeg enables posix_memalign support which doesn't exist on OSX (at least, not on Snow Leopard). The function isn't needed because all OSX mallocs are 16 bytes aligned so I added a new source file with contents like this:
+
+#include <memory.h>
+
+void *posix_memalign(unsigned int size)
+{
+    return malloc(size);
+}
+
+and this fixed the "missing posix_memalign" link errors I was getting.
+
+With those changes Movist builds for me.
+
+
+# ./configure --disable-ffserver --disable-ffplay --enable-memalign-hack
+
+# /tmp/usbmounts/sdb1/toolchain-root/build/ffmpeg-0.5.4/ffmpeg -v
+FFmpeg version 0.5.4, Copyright (c) 2000-2009 Fabrice Bellard, et al.
+  configuration: --disable-ffserver --disable-ffplay --enable-memalign-hack
+  libavutil     49.15. 0 / 49.15. 0
+  libavcodec    52.20. 1 / 52.20. 1
+  libavformat   52.31. 0 / 52.31. 0
+  libavdevice   52. 1. 0 / 52. 1. 0
+  built on Mar 31 2011 21:01:24, gcc: 4.4.2
+/tmp/usbmounts/sdb1/toolchain-root/build/ffmpeg-0.5.4/ffmpeg: missing argument for option '-v'
+
+
+/tmp/usbmounts/sdb1/PUBLIC/IPK # ./ffmpeg -f video4linux2 -s 640x480 -i /dev/v4l/video0 -t 5 -y -r 10 test1.avi
+FFmpeg version 0.5.4, Copyright (c) 2000-2009 Fabrice Bellard, et al.
+  configuration: --disable-ffserver --disable-ffplay --enable-memalign-hack
+  libavutil     49.15. 0 / 49.15. 0
+  libavcodec    52.20. 1 / 52.20. 1
+  libavformat   52.31. 0 / 52.31. 0
+  libavdevice   52. 1. 0 / 52. 1. 0
+  built on Mar 31 2011 21:01:24, gcc: 4.4.2
+[video4linux2 @ 0xd42300][3]Capabilities: 4000001
+
+then TV STOP 
+
+dmesg 
+
+DVR free:101604kB min:672kB low:1008kB high:1344kB active:6700kB inactive:1056kB present:114688kB pages_scanned:0 all_unreclaimable? no
+lowmem_reserve[]: 0 0 0 0
+DMA: 14*4kB 11*8kB 12*16kB 12*32kB 12*64kB 7*128kB 7*256kB 5*512kB 3*1024kB 0*2048kB 0*4096kB 0*8192kB 0*16384kB = 9808kB
+Normal: 358*4kB 398*8kB 360*16kB 296*32kB 246*64kB 178*128kB 101*256kB 39*512kB 13*1024kB 1*2048kB 0*4096kB 0*8192kB 0*16384kB = 119560kB
+HighMem: empty
+DVR: 637*4kB 518*8kB 298*16kB 95*32kB 51*64kB 3*128kB 2*256kB 0*512kB 1*1024kB 2*2048kB 1*4096kB 1*8192kB 4*16384kB = 101604kB
+Swap cache: add 1391, delete 1391, find 2446/2446, race 0+0
+Free swap  = 32kB
+Total swap = 32kB
+oom-killer: gfp_mask=0xd0
+DMA per-cpu:
+cpu 0 hot: low 2, high 6, batch 1
+cpu 0 cold: low 0, high 2, batch 1
+Normal per-cpu:
+cpu 0 hot: low 30, high 90, batch 15
+cpu 0 cold: low 0, high 30, batch 15
+HighMem per-cpu: empty
+DVR per-cpu:
+cpu 0 hot: low 30, high 90, batch 15
+cpu 0 cold: low 0, high 30, batch 15
+
+Free pages:      230972kB (0kB HighMem)
+Active:1692 inactive:264 dirty:0 writeback:0 unstable:0 free:57743 slab:2167 mapped:1611 pagetables:85
+DMA free:9808kB min:96kB low:144kB high:192kB active:0kB inactive:0kB present:16384kB pages_scanned:108 all_unreclaimable? no
+lowmem_reserve[]: 0 32 32 60
+Normal free:119560kB min:768kB low:1152kB high:1536kB active:68kB inactive:0kB present:131072kB pages_scanned:3826 all_unreclaimable? no
+lowmem_reserve[]: 0 0 0 112
+HighMem free:0kB min:128kB low:192kB high:256kB active:0kB inactive:0kB present:0kB pages_scanned:0 all_unreclaimable? no
+lowmem_reserve[]: 0 0 0 448
+DVR free:101604kB min:672kB low:1008kB high:1344kB active:6700kB inactive:1056kB present:114688kB pages_scanned:0 all_unreclaimable? no
+lowmem_reserve[]: 0 0 0 0
+DMA: 14*4kB 11*8kB 12*16kB 12*32kB 12*64kB 7*128kB 7*256kB 5*512kB 3*1024kB 0*2048kB 0*4096kB 0*8192kB 0*16384kB = 9808kB
+Normal: 358*4kB 398*8kB 360*16kB 296*32kB 246*64kB 178*128kB 101*256kB 39*512kB 13*1024kB 1*2048kB 0*4096kB 0*8192kB 0*16384kB = 119560kB
+HighMem: empty
+DVR: 637*4kB 518*8kB 298*16kB 95*32kB 51*64kB 3*128kB 2*256kB 0*512kB 1*1024kB 2*2048kB 1*4096kB 1*8192kB 4*16384kB = 101604kB
+Swap cache: add 1391, delete 1391, find 2446/2446, race 0+0
+Free swap  = 32kB
+Total swap = 32kB
+Out of Memory: Killed process 31719 (php-fcgi).
+sending signal: 9 
+Call Trace:
+ [<80140bb4>] printk+0x1c/0x28
+ [<80151f54>] force_sig+0x54/0x16c
+ [<8017a10c>] out_of_memory+0x310/0x4c4
+ [<8017a10c>] out_of_memory+0x310/0x4c4
+ [<8017cdb4>] __alloc_pages+0x378/0x430
+ [<8017cf04>] __get_free_pages+0x2c/0x64
+ [<c00d2004>] uvc_alloc_buffers+0x174/0x3a8 [uvcvideo]
+ [<c00d1fcc>] uvc_alloc_buffers+0x13c/0x3a8 [uvcvideo]
+ [<c00d541c>] uvc_queue_next_buffer+0x1ef4/0x2898 [uvcvideo]
+ [<80175060>] filemap_nopage+0x1fc/0x744
+ [<801263cc>] r4k_flush_icache_page+0x25c/0x274
+ [<801964a0>] do_no_page+0x9d4/0xb3c
+ [<c0083cdc>] video_usercopy+0x1e8/0x2a4 [videodev]
+ [<801966c8>] handle_mm_fault+0xc0/0x97c
+ [<802ee688>] write_chan+0x0/0x3e4
+ [<801228fc>] do_page_fault+0x16c/0x450
+ [<c00d58d0>] uvc_queue_next_buffer+0x23a8/0x2898 [uvcvideo]
+ [<c00d44d0>] uvc_queue_next_buffer+0xfa8/0x2898 [uvcvideo]
+ [<801d43f4>] sys_ioctl+0x494/0x4f0
+ [<801afa68>] sys_write+0x58/0xa0
+ [<801ae590>] sys_open+0x104/0x144
+ [<801ae564>] sys_open+0xd8/0x144
+ [<8011e444>] do_cpu+0x5a0/0x5d4
+ [<80120040>] stack_done+0x20/0x3c
+ [<801169a8>] handle_cpu_int+0x20/0x38
+
+### caller: ffmpeg, order: 12, mode: 0xd0 ###
+DMA per-cpu:
+cpu 0 hot: low 2, high 6, batch 1
+cpu 0 cold: low 0, high 2, batch 1
+Normal per-cpu:
+cpu 0 hot: low 30, high 90, batch 15
+cpu 0 cold: low 0, high 30, batch 15
+HighMem per-cpu: empty
+DVR per-cpu:
+cpu 0 hot: low 30, high 90, batch 15
+cpu 0 cold: low 0, high 30, batch 15
+
+Free pages:      230972kB (0kB HighMem)
+Active:1675 inactive:281 dirty:0 writeback:0 unstable:0 free:57743 slab:2167 mapped:1611 pagetables:85
+DMA free:9808kB min:96kB low:144kB high:192kB active:0kB inactive:0kB present:16384kB pages_scanned:108 all_unreclaimable? no
+lowmem_reserve[]: 0 32 32 60
+Normal free:119560kB min:768kB low:1152kB high:1536kB active:0kB inactive:68kB present:131072kB pages_scanned:3845 all_unreclaimable? no
+lowmem_reserve[]: 0 0 0 112
+HighMem free:0kB min:128kB low:192kB high:256kB active:0kB inactive:0kB present:0kB pages_scanned:0 all_unreclaimable? no
+lowmem_reserve[]: 0 0 0 448
+DVR free:101604kB min:672kB low:1008kB high:1344kB active:6700kB inactive:1056kB present:114688kB pages_scanned:0 all_unreclaimable? no
+lowmem_reserve[]: 0 0 0 0
+DMA: 14*4kB 11*8kB 12*16kB 12*32kB 12*64kB 7*128kB 7*256kB 5*512kB 3*1024kB 0*2048kB 0*4096kB 0*8192kB 0*16384kB = 9808kB
+Normal: 358*4kB 398*8kB 360*16kB 296*32kB 246*64kB 178*128kB 101*256kB 39*512kB 13*1024kB 1*2048kB 0*4096kB 0*8192kB 0*16384kB = 119560kB
+HighMem: empty
+DVR: 637*4kB 518*8kB 298*16kB 95*32kB 51*64kB 3*128kB 2*256kB 0*512kB 1*1024kB 2*2048kB 1*4096kB 1*8192kB 4*16384kB = 101604kB
+Swap cache: add 1391, delete 1391, find 2446/2446, race 0+0
+Free swap  = 32kB
+Total swap = 32kB
+oom-killer: gfp_mask=0xd0
+DMA per-cpu:
+cpu 0 hot: low 2, high 6, batch 1
+cpu 0 cold: low 0, high 2, batch 1
+Normal per-cpu:
+cpu 0 hot: low 30, high 90, batch 15
+cpu 0 cold: low 0, high 30, batch 15
+HighMem per-cpu: empty
+DVR per-cpu:
+cpu 0 hot: low 30, high 90, batch 15
+cpu 0 cold: low 0, high 30, batch 15
+
+Free pages:      230972kB (0kB HighMem)
+Active:1675 inactive:281 dirty:0 writeback:0 unstable:0 free:57743 slab:2167 mapped:1611 pagetables:85
+DMA free:9808kB min:96kB low:144kB high:192kB active:0kB inactive:0kB present:16384kB pages_scanned:108 all_unreclaimable? no
+lowmem_reserve[]: 0 32 32 60
+Normal free:119560kB min:768kB low:1152kB high:1536kB active:0kB inactive:68kB present:131072kB pages_scanned:3845 all_unreclaimable? no
+lowmem_reserve[]: 0 0 0 112
+HighMem free:0kB min:128kB low:192kB high:256kB active:0kB inactive:0kB present:0kB pages_scanned:0 all_unreclaimable? no
+lowmem_reserve[]: 0 0 0 448
+DVR free:101604kB min:672kB low:1008kB high:1344kB active:6700kB inactive:1056kB present:114688kB pages_scanned:0 all_unreclaimable? no
+lowmem_reserve[]: 0 0 0 0
+DMA: 14*4kB 11*8kB 12*16kB 12*32kB 12*64kB 7*128kB 7*256kB 5*512kB 3*1024kB 0*2048kB 0*4096kB 0*8192kB 0*16384kB = 9808kB
+Normal: 358*4kB 398*8kB 360*16kB 296*32kB 246*64kB 178*128kB 101*256kB 39*512kB 13*1024kB 1*2048kB 0*4096kB 0*8192kB 0*16384kB = 119560kB
+HighMem: empty
+DVR: 637*4kB 518*8kB 298*16kB 95*32kB 51*64kB 3*128kB 2*256kB 0*512kB 1*1024kB 2*2048kB 1*4096kB 1*8192kB 4*16384kB = 101604kB
+Swap cache: add 1391, delete 1391, find 2446/2446, race 0+0
+Free swap  = 32kB
+Total swap = 32kB
+Out of Memory: Killed process 31720 (php-fcgi).
+sending signal: 9 
+Call Trace:
+ [<80140bb4>] printk+0x1c/0x28
+ [<80151f54>] force_sig+0x54/0x16c
+ [<8017a10c>] out_of_memory+0x310/0x4c4
+ [<8017a10c>] out_of_memory+0x310/0x4c4
+ [<8017cdb4>] __alloc_pages+0x378/0x430
+ [<8017cf04>] __get_free_pages+0x2c/0x64
+ [<c00d2004>] uvc_alloc_buffers+0x174/0x3a8 [uvcvideo]
+ [<c00d1fcc>] uvc_alloc_buffers+0x13c/0x3a8 [uvcvideo]
+ [<c00d541c>] uvc_queue_next_buffer+0x1ef4/0x2898 [uvcvideo]
+ [<80175060>] filemap_nopage+0x1fc/0x744
+ [<801263cc>] r4k_flush_icache_page+0x25c/0x274
+ [<801964a0>] do_no_page+0x9d4/0xb3c
+ [<c0083cdc>] video_usercopy+0x1e8/0x2a4 [videodev]
+ [<801966c8>] handle_mm_fault+0xc0/0x97c
+ [<802ee688>] write_chan+0x0/0x3e4
+ [<801228fc>] do_page_fault+0x16c/0x450
+ [<c00d58d0>] uvc_queue_next_buffer+0x23a8/0x2898 [uvcvideo]
+ [<c00d44d0>] uvc_queue_next_buffer+0xfa8/0x2898 [uvcvideo]
+ [<801d43f4>] sys_ioctl+0x494/0x4f0
+ [<801afa68>] sys_write+0x58/0xa0
+ [<801ae590>] sys_open+0x104/0x144
+ [<801ae564>] sys_open+0xd8/0x144
+ [<8011e444>] do_cpu+0x5a0/0x5d4
+ [<80120040>] stack_done+0x20/0x3c
+ [<801169a8>] handle_cpu_int+0x20/0x38
+

@@ -1,0 +1,23 @@
+http://buildroot.uclibc.org/downloads/buildroot.html
+http://forum.xtreamer.net/mediawiki-1.15.1/index.php/Xtreamer_Hardware_Specifications
+
+xtreamer spec point RTD1283 "MIPS32 Release 2" ?
+but Xtreamer_2.6.0.xtr is MIPS32v1?
+ 
+$ file libuClibc-0.9.28.so 
+libuClibc-0.9.28.so: ELF 32-bit LSB shared object, MIPS, MIPS32 version 1 (SYSV), dynamically linked (uses shared libs), stripped
+
+/home/lin/project/ibt1283/unpack/img2/squashfs-root/lib
+$ file libuClibc-0.9.28.so 
+libuClibc-0.9.28.so: ELF 32-bit LSB shared object, MIPS, MIPS32 version 1 (SYSV), dynamically linked (uses shared libs), stripped
+
+
+buildroot 2011-02 at fc14x64 NOT WORKING
+
+http://www.cnitblog.com/gouzhuang/archive/2010/10/22/65447.html
+
+wget http://buildroot.net/downloads/buildroot-2009.11.tar.bz2
+wget http://www.cnitblog.com/Files/gouzhuang/buildroot-2009.11.patch.zip
+
+
+
